@@ -1,0 +1,110 @@
+== build
+Built /Users/vitpic/Developer/MacMiniAudioFix/Retro68/build/MacMini Audio Fix.bin and /Users/vitpic/Developer/MacMiniAudioFix/Retro68/build/MacMini Audio Fix.dsk (stage 3)
+[100%] Built target AudioProbe_APPL
+== install
+hdiutil: WARNING: 'hdiutil detach ...' is deprecated. Please use 'diskutil eject ...' instead.
+== run (timeout 240s)
+Resetting rate control (531893 frames)
+Resetting rate control (146947 frames)
+Resetting rate control (349165 frames)
+Resetting rate control (216710 frames)
+Resetting rate control (68745 frames)
+Resetting rate control (220129 frames)
+== results
+hdiutil: WARNING: 'hdiutil detach ...' is deprecated. Please use 'diskutil eject ...' instead.
+
+==== AudioProbe start (v5.1) ====
+mach=406  sndAttr=00001FFF  alertVol=01000100 (err 0)  outputVol=01000100 (err 0)
+mac-io phys=80000000 logical=80000000 using=80000000
+  [start] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+sysBeepState=0001
+sdev 00010033  sdev/awgc/appl  flags=0000000C  "Built-in"
+default output 'volu': err=0  00860100 00000000
+default output 'hvol': err=0  01000100 00000000
+default output 'hstp': err=0  00100000 00000000
+default output 'hmut': err=0  00000000 00000000
+default output 'srat': err=0  AC440000 00000000
+default output 'ssiz': err=0  00100000 00000000
+default output 'chan': err=0  00020000 00000000
+default output 'hwfm': err=0  00000000 74776F73
+default output 'hwbs': err=0  00010000 00000000
+  [start] MmAf RMW- t=33 fix=3 hp=in main=01000100 plain=00860100 mute=0 werr=0 open=0
+    volume: reads volu=1 hvol=2  changes volu=2 hvol=0 mute=0
+    last change: 'volu' value 0086017A
+    zones: system 00002800-00DB2470  appl 00DB2480-00DC3510  current 00DB2480
+    data  00DB50C0 (INIT-time appl zone)
+    TOC   00DB4F80 (INIT-time appl zone)
+    code  00DB370C (INIT-time appl zone)
+    INIT  00DB2810 (INIT-time appl zone)
+    copy  err=0 TOC 006C92E0 (system heap)
+Import check (stage 3 INIT):
+  45 symbols checked, 0 problems
+Components (type/subtype/manufacturer  flags  open  name):
+  mixr/mixw/appl  00200C0D  1  "Mixer"
+  sdev/awgc/appl  0000000C  1  "Built-in"
+  sift/conv/appl  00210F0F  4  "Sample Format Converter"
+  sift/ratb/appl  80220000  4  "8 and 16 Bit Integer Rate Converter"
+  sift/sour/appl  00200F00  4  "Sound Source"
+  snfx/eqal/appl  00200D0D  4  "Frequency Equalizer"
+  soph/awgc/appl  80000000  2  "Built-in"
+  soph/awgc/appl  80000000  1  "Built-in"
+  630 components
+==== AUTO start ====
+AUTO t=0 wait 5
+AUTO t=300 SndPlay snd 1
+TEST SndPlay snd 1
+  [before] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+  snd 1: size=10274 first words 0001 0001 0005 0000 00A0 0001
+  [after] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+  err=0  FMT seen during test: 00000000
+  [after] MmAf RMW- t=59 fix=3 hp=in main=01000100 plain=01000100 mute=0 werr=0 open=0
+    volume: reads volu=1 hvol=2  changes volu=3 hvol=0 mute=0
+    last change: 'volu' value 01000100
+AUTO t=365 wait 1
+AUTO t=425 44.1 kHz 16-bit
+TEST 44.1 kHz 16-bit
+  [before] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+  [after] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+  err=0  FMT seen during test: 00000000
+  [after] MmAf RMW- t=70 fix=3 hp=in main=01000100 plain=01000100 mute=0 werr=0 open=0
+    volume: reads volu=1 hvol=2  changes volu=3 hvol=0 mute=0
+    last change: 'volu' value 01000100
+AUTO t=539 wait 1
+AUTO t=599 SysBeep
+TEST SysBeep
+  [before] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+  [after] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+  err=0  FMT seen during test: 00000000
+  [after] MmAf RMW- t=86 fix=3 hp=in main=01000100 plain=01000100 mute=0 werr=0 open=0
+    volume: reads volu=1 hvol=3  changes volu=5 hvol=0 mute=0
+    last change: 'volu' value 01000100
+AUTO t=780 wait 2
+AUTO t=900 Volume sweep
+TEST Volume sweep
+  [before] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+  step 01000100: SetDefaultOutputVolume err=0
+  step 00C000C0: SetDefaultOutputVolume err=0
+  step 00800080: SetDefaultOutputVolume err=0
+  step 00400040: SetDefaultOutputVolume err=0
+  step 00100010: SetDefaultOutputVolume err=0
+  restored 01000100 (get err=0)
+  [after] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+  err=0  FMT seen during test: 00000000
+  [after] MmAf RMW- t=114 fix=3 hp=in main=01000100 plain=01000100 mute=0 werr=0 open=0
+    volume: reads volu=1 hvol=4  changes volu=5 hvol=6 mute=0
+    last change: 'hvol' value 01000100
+AUTO t=1197 wait 1
+AUTO t=1257 snapshot
+  [now] amps 6E=07 6F=07 70=00 79=07 6D=00 | 67=00 51=00 | FCR1=00000000 IER=00000000 FMT=00000000 WS=00000000
+  [now] MmAf RMW- t=118 fix=3 hp=in main=01000100 plain=01000100 mute=0 werr=0 open=0
+    volume: reads volu=1 hvol=4  changes volu=5 hvol=6 mute=0
+    last change: 'hvol' value 01000100
+==== AUTO done t=1257 ====
+==== AudioProbe quit ====
+/Users/vitpic/Developer/MacMiniAudioFix/emu/out/run.wav: 44100 Hz, 2 ch, 10.5 s
+     1.00 s   0.20 s long  peak   -9.4 dBFS  rms  -35.2 dBFS
+     1.65 s   0.30 s long  peak   -9.8 dBFS  rms  -19.4 dBFS
+     2.20 s   2.05 s long  peak  -13.7 dBFS  rms  -17.6 dBFS
+     4.55 s   0.25 s long  peak   -9.8 dBFS  rms  -18.6 dBFS
+     5.10 s   5.15 s long  peak  -13.6 dBFS  rms  -17.7 dBFS
+exit 0

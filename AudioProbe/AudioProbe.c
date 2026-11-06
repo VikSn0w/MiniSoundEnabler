@@ -30,6 +30,7 @@
 #include <NameRegistry.h>
 #include <DriverServices.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "Status.h"
 
@@ -793,7 +794,7 @@ static void LogStartup(void)
     beepErr = GetSysBeepVolume(&beepVol);
     outErr = GetDefaultOutputVolume(&outVol);
     Log("");
-    Log("==== AudioProbe start (v5) ====");
+    Log("==== AudioProbe start (v5.1) ====");
     snprintf(line, sizeof(line),
              "mach=%ld  sndAttr=%08lX  alertVol=%08lX (err %d)  outputVol=%08lX (err %d)",
              mach, sndVer, beepVol, beepErr, outVol, outErr);
@@ -806,6 +807,61 @@ static void LogStartup(void)
     LogStatus("start");
     CheckImports();
     LogAllComponents();
+}
+
+/* Unattended mode, for the emulator test loop (emu/test.sh): if a file
+   "AudioProbe Auto" sits next to AudioProbe, run the tests it lists,
+   one per line (names as on the buttons, or "wait <seconds>",
+   "snapshot"), log each with its start time in ticks, then shut the
+   Mac down. Returns false if there is no such file. */
+static Boolean RunAutoTests(void)
+{
+    FILE *f = fopen("AudioProbe Auto", "r");
+    static char text[4096];
+    char *name, *next, line[160];
+    UInt32 start = TickCount();
+    size_t len;
+    int i, n;
+
+    if (!f) return false;
+    /* Mac text files end lines with CR; accept CR, LF or both */
+    len = fread(text, 1, sizeof(text) - 1, f);
+    text[len] = 0;
+    fclose(f);
+    Log("==== AUTO start ====");
+    for (name = text; *name; name = next) {
+        next = name + strcspn(name, "\r\n");
+        if (*next) *next++ = 0;
+        n = strlen(name);
+        while (n > 0 && name[n - 1] == ' ')
+            name[--n] = 0;
+        if (n == 0 || name[0] == '#') continue;
+        snprintf(line, sizeof(line), "AUTO t=%lu %.100s", TickCount() - start, name);
+        Log(line);
+        if (strncmp(name, "wait ", 5) == 0) {
+            UInt32 until = TickCount() + 60 * atoi(name + 5);
+            while (TickCount() < until) {
+                EventRecord ev;
+                WaitNextEvent(everyEvent, &ev, 6, NULL);
+            }
+            continue;
+        }
+        if (strcmp(name, "snapshot") == 0) {
+            LogRegisters("now");
+            LogStatus("now");
+            continue;
+        }
+        for (i = 0; i < kNumTests; i++)
+            if (strcmp(name, kTestNames[i]) == 0) break;
+        if (i == kNumTests) {
+            Log("  unknown test");
+            continue;
+        }
+        RunTest(i);
+    }
+    snprintf(line, sizeof(line), "==== AUTO done t=%lu ====", TickCount() - start);
+    Log(line);
+    return true;
 }
 
 int main(void)
@@ -859,6 +915,13 @@ int main(void)
     SetAnswerButtons(false);
 
     LogStartup();
+
+    if (RunAutoTests()) {
+        Log("==== AudioProbe quit ====");
+        if (gLog) fclose(gLog);
+        ShutDwnPower();
+        return 0;
+    }
 
     while (!gQuit) {
         if (WaitNextEvent(everyEvent, &ev, 6, NULL)) {

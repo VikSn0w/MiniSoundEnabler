@@ -1,0 +1,12 @@
+# AudioProbe unattended test list: one test per line, names as on the
+# buttons, or "wait <seconds>" / "snapshot". Lines starting with # are skipped.
+wait 5
+SndPlay snd 1
+wait 1
+44.1 kHz 16-bit
+wait 1
+SysBeep
+wait 2
+Volume sweep
+wait 1
+snapshot
