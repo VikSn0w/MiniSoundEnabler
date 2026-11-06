@@ -61,4 +61,19 @@ typedef struct {
     SInt16 copyErr;          /* preparing the resident copy in the system heap */
     UInt16 copyPending;      /* set while the resident copy's main() runs */
     UInt32 copyTOC;          /* the resident copy's TOC (its data section) */
+
+    /* Software volume by capture (VolumeCapture.c), per captured component */
+    UInt16 capCount;         /* components captured */
+    SInt16 capErr;           /* last capture/open problem */
+    UInt32 capAttempts;      /* capture attempts (startup, then retries) */
+    UInt32 capType[8];       /* captured component's type */
+    UInt32 capSub[8];        /*   and subtype */
+    UInt32 capOpenAtInit[8]; /* its instances already open at startup */
+    UInt32 capOpens[8];      /* stand-in instances opened */
+    UInt32 capCalls[8];      /* calls through them */
+    UInt32 capData[8];       /* GetSourceData calls */
+    UInt32 capScaled[8];     /* buffers scaled */
+    UInt32 capFormat[8];     /* format of the last buffer */
 } MmAfStatus;
+
+#define kMaxCaptures 8

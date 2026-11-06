@@ -291,6 +291,24 @@ static void LogStatus(const char *when)
              "    volume: reads volu=%lu hvol=%lu  changes volu=%lu hvol=%lu mute=%lu",
              st->volGets, st->hvolGets, st->volSets, st->hvolSets, st->muteSets);
     Log(line);
+    {
+        int k;
+        char ty[5], sub[5], fm[5];
+        for (k = 0; k < st->capCount && k < kMaxCaptures; k++) {
+            TypeStr(ty, st->capType[k]);
+            TypeStr(sub, st->capSub[k]);
+            TypeStr(fm, st->capFormat[k]);
+            snprintf(line, sizeof(line),
+                     "    capture %s/%s: open at init %lu, opens %lu, calls %lu, "
+                     "GetSourceData %lu, scaled %lu, fmt '%s'",
+                     ty, sub, st->capOpenAtInit[k], st->capOpens[k], st->capCalls[k],
+                     st->capData[k], st->capScaled[k], fm);
+            Log(line);
+        }
+        snprintf(line, sizeof(line), "    capture: %u captured after %lu attempts, err %d",
+                 st->capCount, st->capAttempts, st->capErr);
+        Log(line);
+    }
     if (st->volSets || st->hvolSets || st->muteSets) {
         UInt32 sel = st->lastSetSel;
         snprintf(line, sizeof(line),
@@ -794,7 +812,7 @@ static void LogStartup(void)
     beepErr = GetSysBeepVolume(&beepVol);
     outErr = GetDefaultOutputVolume(&outVol);
     Log("");
-    Log("==== AudioProbe start (v5.1) ====");
+    Log("==== AudioProbe start (v5.2) ====");
     snprintf(line, sizeof(line),
              "mach=%ld  sndAttr=%08lX  alertVol=%08lX (err %d)  outputVol=%08lX (err %d)",
              mach, sndVer, beepVol, beepErr, outVol, outErr);

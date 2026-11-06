@@ -24,6 +24,7 @@
 #include <Memory.h>
 #include <MmAfToolbox.h>
 #include "VolumeLogic.h"
+#include "VolumeCapture.h"
 #include "VolumeWrapper.h"
 
 #define kSoundOutputDeviceType  'sdev'
@@ -152,6 +153,12 @@ static ComponentResult Dispatch(ComponentParameters *p, Handle storage)
     if (gSteppedAside)
         return DelegateComponentCall(p, s->inner);
 
+#if MMAF_STAGE >= 3
+    if (p->what == kSoundComponentGetInfoSelect
+        || p->what == kSoundComponentSetInfoSelect)
+        VolumeCaptureRetry();
+#endif
+
     switch (p->what) {
     case kSoundComponentGetInfoSelect:
         /* GetInfo(ti, sourceID, selector, infoPtr): reversed in params */
@@ -212,6 +219,9 @@ OSStatus VolumeWrapperAttach(MmAfStatus *status)
         return status->wrapperErr = kMmAfErrCapture;
     }
 
+#if MMAF_STAGE >= 3
+    VolumeCaptureAttach(status);
+#endif
     gAttached = true;
     status->flags |= kMmAfWrapper;
     return noErr;

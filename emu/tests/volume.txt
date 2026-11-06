@@ -1,0 +1,7 @@
+# Volume: the sweep sets the main volume to 100, 75, 50, 25 and 6 %
+wait 5
+44.1 kHz 16-bit
+wait 1
+Volume sweep
+wait 1
+snapshot
