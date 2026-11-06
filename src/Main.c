@@ -23,7 +23,6 @@
 #include "AmpMonitor.h"
 #include "Status.h"
 #include "HeapCheck.h"
-#include "MachineLogic.h"
 
 #ifndef MMAF_STAGE
 #define MMAF_STAGE 3
@@ -224,41 +223,6 @@ static void ResidentStart(MmAfStatus *status)
 }
 #endif
 
-/* ---- Which Mac is this? ---- */
-
-/* Read one property into buf; returns its length, or 0 */
-static UInt32 ReadProperty(const char *path, const char *prop,
-                           char *buf, UInt32 size)
-{
-    RegEntryID entry;
-    RegPropertyValueSize sz = size;
-
-    if (RegistryCStrEntryLookup(NULL, path, &entry) != noErr)
-        return 0;
-    if (RegistryPropertyGet(&entry, prop, buf, &sz) != noErr)
-        sz = 0;
-    RegistryEntryIDDispose(&entry);
-    return sz;
-}
-
-/* Only the Mac mini G4: its amp and headphone pins are what this
-   extension drives (MachineLogic.h says how it is recognised).
-   Emulator builds (build.sh with EMULATOR=1) skip the check, since
-   QEMU's mac99 is a PowerMac3,1. */
-static Boolean IsMacMiniG4(void)
-{
-#ifdef MMAF_ANY_MACHINE
-    return true;
-#else
-    char rom[96], root[32];
-    UInt32 romLen = ReadProperty("Devices:device-tree:rom:boot-rom", "model",
-                                 rom, sizeof(rom));
-    UInt32 rootLen = ReadProperty("Devices:device-tree", "model",
-                                  root, sizeof(root));
-    return MachineIsMacMiniG4(rom, romLen, root, rootLen);
-#endif
-}
-
 /* ---- Main ---- */
 
 void main(void)
@@ -271,7 +235,7 @@ void main(void)
 #endif
 
     if (Gestalt(gestaltNameRegistryVersion, &gestaltResult) != noErr
-        || !IsMacMiniG4() || MacIOFind() != noErr) {
+        || MacIOFind() != noErr) {
         ShowINITIcon(kIconFail_ID, true);
         return;
     }

@@ -18,7 +18,7 @@ REQUIREMENTS
 - A Mac mini G4: the early 2005 model (1.25 or 1.42 GHz) or the late 2005 one (1.33 or 1.5 GHz). It was tested on an early 2005 model.
 - Mac OS 9.2.2 with the MacOS9Lives patches.
 
-It runs on nothing else. At startup it checks the boot ROM for the Mac mini G4. On any other Mac, including a G4 Cube, it shows a crossed-out icon and touches nothing.
+Do not install it on any other Mac, including a G4 Cube. It writes to the Mac mini's audio control pins, which mean something else on other machines.
 
 
 INSTALLING
@@ -34,7 +34,7 @@ Speaker with sound waves: everything is running.
 
 Speaker with a dash: the speaker and headphone jack are switched on, but switching, alerts and volume are not running. Restart once; if it stays, see Problems below.
 
-Speaker crossed out: this is not a Mac mini G4, or the sound hardware was not found. Nothing was changed.
+Speaker crossed out: the sound hardware was not found. Nothing was changed.
 
 
 UNINSTALLING
