@@ -66,3 +66,44 @@ Then boot the installed system with:
 ```
 emu/vm.sh run
 ```
+
+The first boot of the restored system shows the Mac OS Setup
+Assistant. Get past it once (⌘Q) in the `emu/vm.sh run` window.
+
+## Running tests unattended
+
+```
+emu/test.sh                       # with the extension, tests/default.txt
+emu/test.sh --no-extension        # baseline: the system on its own
+emu/test.sh my-tests.txt --show   # another test list, with a window
+```
+
+The VM must be shut down. `test.sh` does the following:
+
+1. Builds the extension (stage 3) and AudioProbe.
+2. Mounts the VM disk on this Mac. The installed system is Mac OS
+   Extended, which macOS mounts natively.
+3. Installs the extension in `Extensions` and AudioProbe with its test
+   list in `Startup Items`.
+4. Boots the VM with its sound recorded to `emu/out/run.wav`.
+   AudioProbe runs the list and shuts the VM down. After `TIMEOUT`
+   seconds (default 300) the VM is stopped, and a screenshot is saved
+   to `emu/out/last.png`.
+5. Prints AudioProbe's log, and the loudness of each stretch of sound
+   in the recording.
+
+A test list has one entry per line:
+- a test name exactly as on AudioProbe's buttons;
+- `wait <seconds>`;
+- `snapshot`;
+- a line starting with `#` is skipped.
+
+QEMU only writes the WAV while sound is playing. The silent gaps are
+dropped, so the WAV's times don't line up with the log's; the order of
+the sounds does. On the emulated screamer, the "Volume sweep" test
+measures −2, −5, −11 and −23 dB without the extension. With it, the
+sweep is flat, as on the Mac mini.
+
+The emulator has no Mac mini GPIOs. The amp pins and headphone detect
+read 0, so hardware mute and speaker/headphone switching can't be
+tested here.
