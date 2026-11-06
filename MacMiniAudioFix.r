@@ -1,6 +1,6 @@
 /*
  *  MacMiniAudioFix.r  —  v3.0
- *  Rez source for MacMini Audio Fix extension.
+ *  Rez source for Mini Sound Enabler extension.
  */
 
 #include "Types.r"
@@ -9,7 +9,7 @@
 resource 'vers' (1) {
     0x03, 0x00, release, 0x00, verUS,
     "3.0",
-    "3.0 - Mac Mini Audio Fix"
+    "3.0 - Mini Sound Enabler"
 };
 
 resource 'vers' (2) {
@@ -19,12 +19,12 @@ resource 'vers' (2) {
 };
 
 resource 'STR ' (-16482, "Extension Description") {
-    "Mac Mini Audio Fix v3.0 - Speaker/headphone "
+    "Mini Sound Enabler 3.0 - Speaker/headphone "
     "switching, alert sounds and volume for Mac Mini G4."
 };
 
 resource 'STR ' (-16396, "Extension Name") {
-    "MacMini Audio Fix"
+    "Mini Sound Enabler"
 };
 
 /* ICN# 128: Success - speaker with waves */
@@ -123,5 +123,5 @@ resource 'BNDL' (128) {
 
 type 'MmAf' as 'STR ';
 resource 'MmAf' (0) {
-    "MacMini Audio Fix"
+    "Mini Sound Enabler"
 };

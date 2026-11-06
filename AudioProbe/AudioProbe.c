@@ -1,7 +1,7 @@
 /*
  *  AudioProbe.c  —  Mac Mini G4 audio test app for Mac OS 9
  *
- *  Diagnostic tool for the MacMini Audio Fix work. Answers:
+ *  Diagnostic tool for the Mini Sound Enabler work. Answers:
  *  1. Which amp GPIO drives the internal speaker and which the
  *     headphone jack (checkboxes toggle each pin).
  *  2. Whether GPIO 0x67 tracks the headphone jack (live readout).
@@ -239,7 +239,7 @@ static void WatchFor(UInt32 ticks, SndChannelPtr chan)
 
 static OSErr PlayTone(int t, int secs);
 
-/* ---- MacMini Audio Fix status record (Gestalt 'MmAf') ---- */
+/* ---- Mini Sound Enabler status record (Gestalt 'MmAf') ---- */
 
 static MmAfStatus *GetStatus(void)
 {

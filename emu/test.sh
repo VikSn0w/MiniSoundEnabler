@@ -6,7 +6,7 @@
 #
 #  1. Builds the extension (stage 3) and AudioProbe.
 #  2. Mounts the VM disk (VM must be shut down) and installs:
-#       System Folder:Extensions:MacMini Audio Fix   (unless --no-extension)
+#       System Folder:Extensions:Mini Sound Enabler   (unless --no-extension)
 #       System Folder:Startup Items:AudioProbe
 #       System Folder:Startup Items:AudioProbe Auto  (the test list)
 #  3. Boots the VM with sound recorded to a WAV file (no window unless
@@ -57,11 +57,11 @@ echo "== install"
 MP=$(mount_disk "")
 [ -n "$MP" ] || { echo "could not mount $VMDIR/os9.img" >&2; exit 1; }
 SYS="$MP/System Folder"
-EXT="$SYS/Extensions/MacMini Audio Fix"
+EXT="$SYS/Extensions/Mini Sound Enabler"
 SI="$SYS/Startup Items"
 rm -f "$EXT" "$SI/AudioProbe" "$SI/AudioProbe Log" "$SI/AudioProbe Auto"
 if [ $INSTALL_EXT = 1 ]; then
-    python3 -I "$HERE/macbin.py" "$ROOT/Retro68/build/stage3/MacMini Audio Fix.bin" "$EXT"
+    python3 -I "$HERE/macbin.py" "$ROOT/Retro68/build/stage3/Mini Sound Enabler.bin" "$EXT"
 fi
 python3 -I "$HERE/macbin.py" "$ROOT/AudioProbe/build/AudioProbe.bin" "$SI/AudioProbe"
 tr '\n' '\r' < "$TESTS" > "$SI/AudioProbe Auto"

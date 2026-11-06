@@ -1,4 +1,7 @@
-# MacMini Audio Fix v3 — Technical Notes
+# Mini Sound Enabler 3.0 — Technical Notes
+
+Until version 3.0 this extension was called **MacMini Audio Fix**; the
+repository, source files and the `MmAf` creator code keep that name.
 
 A Mac OS 9 system extension for the **Mac mini G4** (A1103,
 PowerMac10,1/10,2) running Mac OS 9.2.2 through the MacOS9Lives
@@ -297,8 +300,8 @@ BREADCRUMBS=1 Retro68/build.sh 3   # debug: a dash icon per startup step
 | 3 | volume changes stored, mute in hardware (**release**) |
 
 Each build is copied to `Retro68/build/stage<N>/`. It produces two files:
-- `MacMini Audio Fix.bin`: MacBinary, which keeps the resource fork;
-- `MacMini Audio Fix.dsk`: a raw HFS image.
+- `Mini Sound Enabler.bin`: MacBinary, which keeps the resource fork;
+- `Mini Sound Enabler.dsk`: a raw HFS image.
 
 Disk Copy 6.5 may refuse the raw image. If so, decode the `.bin` with
 StuffIt Expander instead.
@@ -346,9 +349,9 @@ fix, next to a known-good CodeWarrior build.
 
 ## 6. Installing
 
-1. Copy `MacMini Audio Fix.bin` to the Mac mini and decode it with
+1. Copy `Mini Sound Enabler.bin` to the Mac mini and decode it with
    StuffIt Expander.
-2. Put **MacMini Audio Fix** in `System Folder:Extensions:` (replacing
+2. Put **Mini Sound Enabler** in `System Folder:Extensions:` (replacing
    any older version) and restart.
 3. To disable it, hold **Shift** at startup or use Extensions Manager.
 

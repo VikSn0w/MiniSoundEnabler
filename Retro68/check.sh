@@ -1,8 +1,8 @@
 #!/bin/sh
 #
-#  check.sh  —  structural checks on a built MacMini Audio Fix
+#  check.sh  —  structural checks on a built Mini Sound Enabler
 #
-#  Usage: ./check.sh "build/MacMini Audio Fix.bin"
+#  Usage: ./check.sh "build/Mini Sound Enabler.bin"
 #
 #  Prints the file's resources, then the PEF inside INIT 0: which
 #  section holds main and which shared libraries and symbols it imports.
@@ -12,7 +12,7 @@ set -e
 
 RETRO68=${RETRO68:-$HOME/Retro68-toolchain}
 HERE=$(cd "$(dirname "$0")" && pwd)
-BIN=${1:-"$HERE/build/MacMini Audio Fix.bin"}
+BIN=${1:-"$HERE/build/Mini Sound Enabler.bin"}
 PEF="$HERE/build/MacMiniAudioFix.pef"
 
 "$RETRO68/bin/ResInfo" -a "$BIN"

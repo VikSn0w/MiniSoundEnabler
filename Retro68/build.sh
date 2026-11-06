@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-#  build.sh  —  build MacMini Audio Fix with Retro68 on a modern Mac
+#  build.sh  —  build Mini Sound Enabler with Retro68 on a modern Mac
 #
 #  Produces, in Retro68/build/:
-#    MacMini Audio Fix.bin   MacBinary (keeps the resource fork)
-#    MacMini Audio Fix.dsk   HFS disk image with the extension on it
+#    Mini Sound Enabler.bin   MacBinary (keeps the resource fork)
+#    Mini Sound Enabler.dsk   HFS disk image with the extension on it
 #
 #  Retro68 can't make a PowerPC code resource by itself, so this links
 #  the code into a PEF fragment and puts it in INIT 0 behind a Mixed
@@ -31,7 +31,7 @@ RETRO68=${RETRO68:-$HOME/Retro68-toolchain}
 HERE=$(cd "$(dirname "$0")" && pwd)
 SRC="$HERE/.."
 OUT="$HERE/build"
-NAME="MacMini Audio Fix"
+NAME="Mini Sound Enabler"
 
 CC="$RETRO68/bin/powerpc-apple-macos-gcc"
 MAKEPEF="$RETRO68/bin/MakePEF"

@@ -1,5 +1,5 @@
 /*
- *  Main.c  —  MacMini Audio Fix v3  INIT entry
+ *  Main.c  —  Mini Sound Enabler v3  INIT entry
  *
  *  Mac OS 9 System Extension for Mac Mini G4 audio.
  *  Stage 0 (MMAF_STAGE 0) is the v8.0 one-shot fix. Stage 1 stays

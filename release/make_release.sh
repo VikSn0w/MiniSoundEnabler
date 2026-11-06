@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#  make_release.sh  —  build the MacMini Audio Fix release
+#  make_release.sh  —  build the Mini Sound Enabler release
 #
 #  Usage: release/make_release.sh
 #
@@ -8,13 +8,13 @@
 #  check) and AudioProbe, runs the host tests, and writes to
 #  release/dist/:
 #
-#    MacMiniAudioFix-3.0.img       Disk Copy 4.2 image (dImg/dCpy):
-#                                    MacMini Audio Fix
+#    MiniSoundEnabler-3.0.img       Disk Copy 4.2 image (dImg/dCpy):
+#                                    Mini Sound Enabler
 #                                    Read Me               (SimpleText)
 #                                    Extras:AudioProbe
-#    MacMiniAudioFix-3.0.img.bin   the image as MacBinary
-#    MacMiniAudioFix-3.0.img.hqx   the image as BinHex
-#    MacMiniAudioFix-3.0-source.zip  the source (git HEAD)
+#    MiniSoundEnabler-3.0.img.bin   the image as MacBinary
+#    MiniSoundEnabler-3.0.img.hqx   the image as BinHex
+#    MiniSoundEnabler-3.0-source.zip  the source (git HEAD)
 #    SHA256SUMS
 #
 #  The working tree must be clean, so the source zip matches the build.
@@ -27,8 +27,8 @@ ROOT=$(cd "$HERE/.." && pwd)
 RETRO68=${RETRO68:-$HOME/Retro68-toolchain}
 H="$RETRO68/bin"
 DIST="$HERE/dist"
-NAME="MacMiniAudioFix-$VERSION"
-VOL="MacMini Audio Fix $VERSION"
+NAME="MiniSoundEnabler-$VERSION"
+VOL="Mini Sound Enabler $VERSION"
 
 if [ -n "$(git -C "$ROOT" status --porcelain)" ] && [ -z "$ALLOW_DIRTY" ]; then
     echo "Uncommitted changes; commit first (or ALLOW_DIRTY=1 for a trial)." >&2
@@ -41,7 +41,7 @@ make -s -C "$ROOT/tests" test
 echo "== build"
 "$ROOT/Retro68/build.sh" 3 | tail -1
 cmake --build "$ROOT/AudioProbe/build" | tail -1
-EXT="$ROOT/Retro68/build/stage3/MacMini Audio Fix.bin"
+EXT="$ROOT/Retro68/build/stage3/Mini Sound Enabler.bin"
 PROBE="$ROOT/AudioProbe/build/AudioProbe.bin"
 
 rm -rf "$DIST"
@@ -55,7 +55,7 @@ iconv -f UTF-8 -t MACINTOSH "$HERE/ReadMe.txt" | tr '\n' '\r' > "$WORK/ReadMe"
 dd if=/dev/zero of="$WORK/vol.hfs" bs=1024 count=1440 2>/dev/null
 "$H/hformat" -l "$VOL" "$WORK/vol.hfs" >/dev/null
 "$H/hmount" "$WORK/vol.hfs" >/dev/null
-"$H/hcopy" -m "$EXT" ":MacMini Audio Fix"
+"$H/hcopy" -m "$EXT" ":Mini Sound Enabler"
 "$H/hcopy" -r "$WORK/ReadMe" ":Read Me"
 "$H/hattrib" -t TEXT -c ttxt ":Read Me"
 "$H/hmkdir" ":Extras"

@@ -1,5 +1,7 @@
-MacMini Audio Fix 3.0
+Mini Sound Enabler 3.0
 for the Mac mini G4 running Mac OS 9.2.2 (MacOS9Lives)
+
+(Formerly MacMini Audio Fix.)
 
 Under Mac OS 9 the Mac mini G4's internal speaker is silent and the headphone jack barely works, because the sound driver leaves the output amplifiers switched off. This extension switches them on and makes the rest of the built-in audio usable.
 
@@ -23,8 +25,8 @@ Do not install it on any other Mac, including a G4 Cube. It writes to the Mac mi
 
 INSTALLING
 
-1. Remove any older version of MacMini Audio Fix from the Extensions folder.
-2. Drag "MacMini Audio Fix" onto your closed System Folder. Mac OS puts it in the Extensions folder.
+1. Remove any older version from the Extensions folder. Earlier versions were called "MacMini Audio Fix".
+2. Drag "Mini Sound Enabler" onto your closed System Folder. Mac OS puts it in the Extensions folder.
 3. Restart.
 
 
@@ -39,7 +41,7 @@ Speaker crossed out: the sound hardware was not found. Nothing was changed.
 
 UNINSTALLING
 
-Drag "MacMini Audio Fix" from System Folder:Extensions to the Trash and restart. Holding Shift at startup, or turning it off in Extensions Manager, also disables it.
+Drag "Mini Sound Enabler" from System Folder:Extensions to the Trash and restart. Holding Shift at startup, or turning it off in Extensions Manager, also disables it.
 
 
 GOOD TO KNOW
@@ -58,6 +60,6 @@ LICENSE AND SOURCE
 
 Copyright 2026 Vittorio Picone.
 
-MacMini Audio Fix is free software, released under the GNU General Public License version 3. The source code and full technical notes are in MacMiniAudioFix-3.0-source.zip, published alongside this disk image.
+Mini Sound Enabler is free software, released under the GNU General Public License version 3. The source code and full technical notes are in MiniSoundEnabler-3.0-source.zip, published alongside this disk image.
 
 Built with Retro68. Thanks to the MacOS9Lives community for making OS 9 run on the Mac mini at all.
