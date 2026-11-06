@@ -30,6 +30,21 @@ jack is nearly silent and the speaker is mute. The Mac mini has no
 TAS3004 codec: there is no hardware volume, and the amplifiers are
 controlled by GPIO pins.
 
+### Which Mac this is
+
+The extension runs only on a Mac mini G4. Because of the Cube
+disguise, the device tree root says `model "PowerMac5,1"`, the same as
+a real G4 Cube, whose GPIO pins mean something else. The boot ROM node
+keeps the real name: `Devices:device-tree:rom:boot-rom`, property
+`model`, reads `"Apple PowerMac10,1 4.8.9f4 BootROM built on 03/23/05
+…"` on the test machine. The check (`src/MachineLogic.c`, host-tested)
+accepts `PowerMac10,<digit>` in that property, or in the root `model`
+for a system that doesn't disguise the mini. Anything else gets the
+**X** icon and no change to any hardware.
+
+The sound node `mac-io:i2s:i2s-a:sound` (`compatible "AOAKeylargo"`)
+also has `layout-id` 58 here; it isn't used by the check.
+
 ### mac-io
 
 The mac-io base address comes from the Name Registry: the
@@ -184,7 +199,9 @@ current** when the fragment is prepared.
 
 `main()` in the startup run does the following:
 
-1. Finds mac-io; on failure it shows the **X** icon and returns.
+1. Checks that this is a Mac mini G4 ([Which Mac this is](#which-mac-this-is))
+   and finds mac-io; if either fails it shows the **X** icon and
+   returns.
 2. Creates the status record in the system heap and publishes it with
    `NewGestaltValue`.
 3. Copies the PEF from resource **`'MmPf' 0`** into a `NewPtrSys`
@@ -214,7 +231,7 @@ all four amps on once, and the **dash** icon.
 |---|---|
 | speaker (ICN# 128) | everything running |
 | speaker with dash (130) | amps handled, but resident part or wrapper not running |
-| speaker with X (129) | mac-io not found, nothing changed |
+| speaker with X (129) | not a Mac mini G4, or mac-io not found; nothing changed |
 
 ---
 
@@ -289,6 +306,7 @@ the amp monitor switches both output amps off.
 Retro68/build.sh [stage]       # stage 0–3, default 3 (release)
 Retro68/check.sh               # resources, PEF main, imports per library
 BREADCRUMBS=1 Retro68/build.sh 3   # debug: a dash icon per startup step
+EMULATOR=1 Retro68/build.sh 3      # no Mac-mini check, for QEMU only
 ```
 
 | Stage | Adds |
@@ -314,7 +332,8 @@ make -C tests test
 These cover:
 - `AmpLogic`: debounce, the pin table, silent mode, corrections;
 - `VolumeLogic`: clamp, combine, 16-bit scaling;
-- `HeapCheck`.
+- `HeapCheck`;
+- `MachineLogic`: Mac mini, Cube and QEMU model strings.
 
 ### AudioProbe (diagnostic app)
 
@@ -368,6 +387,7 @@ src/                 extension source
   VolumeCapture.c    software volume: captures the per-channel equalizer
   VolumeLogic.c      volume clamp / combine / scale (pure, host-tested)
   HeapCheck.c        address-range check (pure, host-tested)
+  MachineLogic.c     is this a Mac mini G4? (pure, host-tested)
   Status.h           status record shared with AudioProbe
 MacMiniAudioFix.r    vers, STR, ICN#, FREF, BNDL resources
 Retro68/             build.sh, check.sh, repack_pef.py, variants.sh, glue.c,

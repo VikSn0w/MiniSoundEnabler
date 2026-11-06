@@ -2,9 +2,12 @@
 #
 #  test.sh  —  build, install into the OS 9 VM, run AudioProbe unattended
 #
-#  Usage: emu/test.sh [tests.txt] [--no-extension] [--show]
+#  Usage: emu/test.sh [tests.txt] [--no-extension] [--release] [--show]
 #
-#  1. Builds the extension (stage 3) and AudioProbe.
+#  1. Builds the extension (stage 3) and AudioProbe. The emulator build
+#     (EMULATOR=1) skips the Mac-mini-only check, since QEMU is a
+#     PowerMac3,1; --release installs the shipping build instead, which
+#     should refuse to run here (X icon, no status record).
 #  2. Mounts the VM disk (VM must be shut down) and installs:
 #       System Folder:Extensions:MacMini Audio Fix   (unless --no-extension)
 #       System Folder:Startup Items:AudioProbe
@@ -28,10 +31,12 @@ OUT="$HERE/out"
 
 TESTS="$HERE/tests/default.txt"
 INSTALL_EXT=1
+VARIANT=stage3-emu
 DISPLAY_OPT="-display none"
 for a in "$@"; do
     case "$a" in
     --no-extension) INSTALL_EXT=0 ;;
+    --release) VARIANT=stage3 ;;
     --show) DISPLAY_OPT="" ;;
     *) TESTS="$a" ;;
     esac
@@ -46,6 +51,7 @@ rm -f "$OUT/AudioProbe.log" "$OUT/run.wav" "$OUT/last.png"
 
 echo "== build"
 "$ROOT/Retro68/build.sh" 3 | tail -1
+EMULATOR=1 "$ROOT/Retro68/build.sh" 3 | tail -1
 cmake --build "$ROOT/AudioProbe/build" | tail -1
 
 mount_disk() {   # $1: extra hdiutil flags; prints the mount point
@@ -61,7 +67,7 @@ EXT="$SYS/Extensions/MacMini Audio Fix"
 SI="$SYS/Startup Items"
 rm -f "$EXT" "$SI/AudioProbe" "$SI/AudioProbe Log" "$SI/AudioProbe Auto"
 if [ $INSTALL_EXT = 1 ]; then
-    python3 -I "$HERE/macbin.py" "$ROOT/Retro68/build/stage3/MacMini Audio Fix.bin" "$EXT"
+    python3 -I "$HERE/macbin.py" "$ROOT/Retro68/build/$VARIANT/MacMini Audio Fix.bin" "$EXT"
 fi
 python3 -I "$HERE/macbin.py" "$ROOT/AudioProbe/build/AudioProbe.bin" "$SI/AudioProbe"
 tr '\n' '\r' < "$TESTS" > "$SI/AudioProbe Auto"

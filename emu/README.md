@@ -76,6 +76,7 @@ Assistant. Get past it once (⌘Q) in the `emu/vm.sh run` window.
 emu/test.sh                       # with the extension, tests/default.txt
 emu/test.sh --no-extension        # baseline: the system on its own
 emu/test.sh my-tests.txt --show   # another test list, with a window
+emu/test.sh --release             # shipping build: must refuse to run
 ```
 
 The VM must be shut down. `test.sh` does the following:
@@ -103,6 +104,12 @@ dropped, so the WAV's times don't line up with the log's; the order of
 the sounds does. On the emulated screamer, the "Volume sweep" test
 measures −2, −5, −11 and −23 dB without the extension. With it, the
 sweep is flat, as on the Mac mini.
+
+`test.sh` installs the emulator build of the extension
+(`EMULATOR=1`), which skips the Mac-mini-only check: QEMU's `mac99`
+calls itself a PowerMac3,1. `--release` installs the shipping build
+instead, which should refuse to run (AudioProbe logs "MmAf status:
+not installed").
 
 The emulator has no Mac mini GPIOs. The amp pins and headphone detect
 read 0, so hardware mute and speaker/headphone switching can't be

@@ -801,6 +801,138 @@ static void LogAllComponents(void)
     if (name) DisposeHandle(name);
 }
 
+/* One Name Registry property as text; string lists (compatible) are
+   NUL-separated, shown with '|' between the strings. */
+static void LogProperty(const char *who, RegEntryID *entry, const char *prop)
+{
+    char value[200], line[260];
+    RegPropertyValueSize sz = sizeof(value) - 1;
+    OSStatus err = RegistryPropertyGet(entry, prop, value, &sz);
+    unsigned i;
+
+    if (err != noErr) {
+        snprintf(line, sizeof(line), "  %s %s: err %ld", who, prop, err);
+    } else {
+        for (i = 0; i < sz; i++)
+            if (value[i] == 0) value[i] = '|';
+        value[sz] = 0;
+        snprintf(line, sizeof(line), "  %s %s: \"%s\"", who, prop, value);
+    }
+    Log(line);
+}
+
+/* Every property of one entry: text if it reads as text, else hex */
+static void LogAllProperties(RegEntryID *entry)
+{
+    RegPropertyIter it;
+    char name[kRegMaximumPropertyNameLength + 1];
+    unsigned char value[64];
+    char line[300];
+    Boolean done = false;
+    RegPropertyValueSize full, sz;
+    unsigned i, text;
+    int n;
+
+    if (RegistryPropertyIterateCreate(entry, &it) != noErr) return;
+    while (RegistryPropertyIterate(&it, name, &done) == noErr && !done) {
+        full = 0;
+        RegistryPropertyGetSize(entry, name, &full);
+        sz = full < sizeof(value) ? full : sizeof(value);
+        if (sz > 0 && RegistryPropertyGet(entry, name, value, &sz) != noErr)
+            sz = 0;
+        if (sz > full) sz = full;
+        text = sz > 0 && value[sz - 1] == 0;
+        for (i = 0; i < sz && text; i++)
+            if (value[i] != 0 && (value[i] < 32 || value[i] > 126)) text = 0;
+        n = snprintf(line, sizeof(line), "      %s (%lu): ", name,
+                     (unsigned long)full);
+        if (text) {
+            for (i = 0; i + 1 < sz; i++)
+                if (value[i] == 0) value[i] = '|';
+            snprintf(line + n, sizeof(line) - n, "\"%s\"", (char *)value);
+        } else {
+            for (i = 0; i < sz && n < (int)sizeof(line) - 4; i++)
+                n += snprintf(line + n, sizeof(line) - n, "%02X", value[i]);
+            if (sz < full) snprintf(line + n, sizeof(line) - n, "...");
+        }
+        Log(line);
+    }
+    RegistryPropertyIterateDispose(&it);
+}
+
+/* Is this a node whose properties are worth listing in full? */
+static Boolean InterestingPath(const char *path)
+{
+    static const char *const kWords[] = {
+        "sound", "rom", "openprom", "gpio", "i2c", "cpus", "uni-n",
+        "mac-io", "pci", "via-pmu", "chosen", "ata", "usb", "firewire",
+        "ethernet", "video", "ATY", "display", "fan", "temp", "smu"
+    };
+    unsigned i;
+    for (i = 0; i < sizeof(kWords) / sizeof(kWords[0]); i++)
+        if (strstr(path, kWords[i])) return true;
+    return false;
+}
+
+/* The whole device tree: each node's path, with the properties of the
+   root and of nodes that might tell one PowerMac5,1 from another */
+static void LogDeviceTree(void)
+{
+    RegEntryIter it;
+    RegEntryID entry;
+    Boolean done = false;
+    char path[256], line[300];
+    int count = 0;
+
+    Log("Device tree:");
+    if (RegistryEntryIterateCreate(&it) != noErr) return;
+    while (count < 4000 &&
+           RegistryEntryIterate(&it, count ? kRegIterContinue : kRegIterDescendants,
+                                &entry, &done) == noErr
+           && !done) {
+        if (RegistryCStrEntryToPath(&entry, path, sizeof(path)) != noErr)
+            strcpy(path, "?");
+        if (strncmp(path, "Devices:device-tree", 19) == 0) {
+            snprintf(line, sizeof(line), "  %s", path);
+            Log(line);
+            if (path[19] == 0 || InterestingPath(path))
+                LogAllProperties(&entry);
+        }
+        RegistryEntryIDDispose(&entry);
+        count++;
+    }
+    RegistryEntryIterateDispose(&it);
+    snprintf(line, sizeof(line), "  %d registry entries walked", count);
+    Log(line);
+}
+
+/* What the Mac says it is: the device tree root and mac-io */
+static void LogMachine(void)
+{
+    RegEntryID root, macio;
+    RegEntryIter cookie;
+    Boolean done = false;
+
+    Log("Machine (Name Registry):");
+    if (RegistryCStrEntryLookup(NULL, "Devices:device-tree", &root) == noErr) {
+        LogProperty("root", &root, "name");
+        LogProperty("root", &root, "model");
+        LogProperty("root", &root, "compatible");
+    } else {
+        Log("  no Devices:device-tree");
+    }
+    if (RegistryEntryIterateCreate(&cookie) == noErr) {
+        if (RegistryEntrySearch(&cookie, kRegIterSubTrees, &macio, &done,
+                                "name", "mac-io", 6) == noErr && !done) {
+            LogProperty("mac-io", &macio, "name");
+            LogProperty("mac-io", &macio, "compatible");
+            LogProperty("mac-io", &macio, "model");
+        }
+        RegistryEntryIterateDispose(&cookie);
+    }
+    LogDeviceTree();
+}
+
 static void LogStartup(void)
 {
     char line[160];
@@ -812,7 +944,7 @@ static void LogStartup(void)
     beepErr = GetSysBeepVolume(&beepVol);
     outErr = GetDefaultOutputVolume(&outVol);
     Log("");
-    Log("==== AudioProbe start (v5.2) ====");
+    Log("==== AudioProbe start (v5.4) ====");
     snprintf(line, sizeof(line),
              "mach=%ld  sndAttr=%08lX  alertVol=%08lX (err %d)  outputVol=%08lX (err %d)",
              mach, sndVer, beepVol, beepErr, outVol, outErr);
@@ -823,6 +955,7 @@ static void LogStartup(void)
     LogRegisters("start");
     LogSoundOutput();
     LogStatus("start");
+    LogMachine();
     CheckImports();
     LogAllComponents();
 }

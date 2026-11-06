@@ -23,6 +23,8 @@
 #  Each stage's result is also copied to build/stage<N>/.
 #  BREADCRUMBS=1 builds a debug version that draws a dash icon at each
 #  startup step (see Main.c), copied to build/stage<N>-debug/.
+#  EMULATOR=1 builds a version without the Mac-mini-only check, for
+#  QEMU, copied to build/stage<N>-emu/. Never ship it.
 
 set -e
 
@@ -47,9 +49,16 @@ cd "$OUT"
 #    glue.c stands in for libgcc's __main, which gcc calls from main().
 #    min-pagesize=0 because low memory (0x92C) is a real address here.
 CFLAGS="-Os -Wall -Wno-main -Wno-unused-function --param=min-pagesize=0"
+SUFFIX=
 if [ -n "$BREADCRUMBS" ]; then
     CFLAGS="$CFLAGS -DMMAF_BREADCRUMBS"
     SUFFIX=-debug
+fi
+# EMULATOR=1: skip the Mac-mini-only check, for QEMU (a PowerMac3,1).
+# Never ship these.
+if [ -n "$EMULATOR" ]; then
+    CFLAGS="$CFLAGS -DMMAF_ANY_MACHINE"
+    SUFFIX="$SUFFIX-emu"
 fi
 OBJS=""
 for c in "$SRC"/src/*.c; do

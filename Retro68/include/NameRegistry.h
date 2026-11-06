@@ -38,7 +38,35 @@ OSStatus RegistryEntrySearch(RegEntryIter *cookie,
                              const RegPropertyName *propertyName,
                              const void *propertyValue,
                              RegPropertyValueSize propertyValueSize);
+typedef char RegCStrPathName;
+
+/* e.g. RegistryCStrEntryLookup(NULL, "Devices:device-tree", &root) */
+OSStatus RegistryCStrEntryLookup(const RegEntryID *searchPointID,
+                                 const RegCStrPathName *pathName,
+                                 RegEntryID *foundEntry);
+OSStatus RegistryPropertyGetSize(const RegEntryID *entryID,
+                                 const RegPropertyName *propertyName,
+                                 RegPropertyValueSize *propertySize);
 OSStatus RegistryPropertyGet(const RegEntryID *entryID,
                              const RegPropertyName *propertyName,
                              void *propertyValue,
                              RegPropertyValueSize *propertySize);
+
+/* Walking the tree and listing properties */
+typedef UInt32 RegPathNameSize;
+typedef struct OpaqueRegPropertyIter *RegPropertyIter;
+enum { kRegMaximumPropertyNameLength = 31 };
+
+OSStatus RegistryEntryIterate(RegEntryIter *cookie,
+                              RegEntryIterationOp relationship,
+                              RegEntryID *foundEntry, Boolean *done);
+OSStatus RegistryEntryIDDispose(RegEntryID *id);
+OSStatus RegistryCStrEntryToPath(const RegEntryID *entryID,
+                                 RegCStrPathName *pathName,
+                                 RegPathNameSize pathSize);
+OSStatus RegistryPropertyIterateCreate(const RegEntryID *entry,
+                                       RegPropertyIter *cookie);
+OSStatus RegistryPropertyIterateDispose(RegPropertyIter *cookie);
+OSStatus RegistryPropertyIterate(RegPropertyIter *cookie,
+                                 RegPropertyName *foundProperty,
+                                 Boolean *done);
