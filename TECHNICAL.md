@@ -12,7 +12,7 @@ unsupported-hardware patch. It makes the built-in audio usable:
 | System alert sounds (SysBeep) play | Works |
 | Mute, and volume at zero, are silent | Works (amps switched off) |
 | Volume slider / Control Strip keep their setting | Works |
-| Intermediate volume levels change loudness | **Not achieved** (see [Volume control](#volume-control)) |
+| Intermediate volume levels change loudness | Works (equalizer capture, see [Volume control](#volume-control)) |
 
 Everything below was established on the real machine, using the
 AudioProbe diagnostic app in this repository.
@@ -220,12 +220,41 @@ all four amps on once, and the **dash** icon.
 
 ## 4. Volume control
 
-The volume settings reach the wrapper correctly, but **nothing applies
-them to the samples**. These were all tried on the Mac mini and
-failed:
+**What works.** Every Sound Manager channel's component chain contains
+an `snfx/eqal` **Frequency Equalizer**, opened per channel.
+`src/VolumeCapture.c` captures it behind a stand-in with the same
+description. The stand-in forwards every call to a real equalizer, and
+scales each 16-bit buffer returned by `GetSourceData` by main ×
+plain volume, or silences it when muted. Scaling every channel scales
+the output.
+
+The equalizer isn't registered yet when the INIT runs. So the wrapper
+retries the capture from task-time GetInfo/SetInfo calls until it
+succeeds, which on both the Mac mini and the emulator is the second
+attempt. Channels opened before that aren't scaled. On the Mac mini
+there were none (`open at init 0`); in the emulator there were 4.
+
+Verified:
+- **Emulator:** the volume sweep measures −17.5, −20.0, −23.6, −29.6
+  and −41.6 dBFS for 100/75/50/25/6 %, within 0.1 dB of expected.
+- **Mac mini (2026-11-06):** volume sweep heard stepping down; the
+  slider and Control Strip change the level; 600 buffers scaled in one
+  session.
+
+**What failed before** (the driver path):
 
 | Approach | Result |
 |---|---|
+| Forward volume to the mixer given in `SetSource` | The wrapper never receives `SetSource` |
+| Capture the mixer component (`mixr/mixw/appl`) | The driver's mixer is an instance the Sound Manager opened itself; the stand-in is only asked its version |
+| `SetSource` on the driver to a scaling stage | Returns garbage; the driver keeps its mixer |
+| `SetInfo` `volu`/`hvol` on the Mixer, `sourceID` NULL | −205 (`badChannel`): per-channel volume only |
+
+Open question: the Control Strip sets `volu` with unequal channel
+values (e.g. `00A500F4`, right 0xA5 / left 0xF4) that are scaled as
+given.
+
+---|---|
 | Forward volume to the mixer given in `SetSource` | The wrapper never receives `SetSource`; the driver sets up its own mixer |
 | Capture the mixer component (`mixr/mixw/appl`, the only one) behind a scaling stand-in | The stand-in is opened once, asked only its version; the driver's mixer is a different instance the Sound Manager opened itself |
 | `GetSource` on the driver | Works: returns that Mixer instance |
@@ -336,6 +365,7 @@ src/                 extension source
   AmpLogic.c         pin rules (pure, host-tested)
   AmpMonitor.c       Time Manager task
   VolumeWrapper.c    'awgc' wrapper: volume, mute, SysBeep
+  VolumeCapture.c    software volume: captures the per-channel equalizer
   VolumeLogic.c      volume clamp / combine / scale (pure, host-tested)
   HeapCheck.c        address-range check (pure, host-tested)
   Status.h           status record shared with AudioProbe
