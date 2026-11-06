@@ -271,24 +271,8 @@ Open question: the Control Strip sets `volu` with unequal channel
 values (e.g. `00A500F4`, right 0xA5 / left 0xF4) that are scaled as
 given.
 
----|---|
-| Forward volume to the mixer given in `SetSource` | The wrapper never receives `SetSource`; the driver sets up its own mixer |
-| Capture the mixer component (`mixr/mixw/appl`, the only one) behind a scaling stand-in | The stand-in is opened once, asked only its version; the driver's mixer is a different instance the Sound Manager opened itself |
-| `GetSource` on the driver | Works: returns that Mixer instance |
-| `GetSource` on the mixer | −205: one source per channel |
-| `SetSource` on the driver to a scaling stage | Returns garbage; the driver keeps its mixer |
-| `SetInfo` `volu`/`hvol` on the Mixer, `sourceID` NULL | −205 (`badChannel`): the mixer only takes per-channel volume |
-
-Untried ideas:
-- force the Sound Manager to rebuild its output chain after the mixer
-  is captured;
-- scale the I2S DMA buffers directly (DBDMA TX at `mac-io + 0x8200`).
-
-The scaling arithmetic is already written and tested: `VolumeCombine`
-and `VolumeScale16` in `src/VolumeLogic.c`.
-
-Because silence can be done in hardware, **Mute and volume 0 work**:
-the amp monitor switches both output amps off.
+Separately from the volume level, **mute and volume 0 are silent in
+hardware**: the amp monitor switches both output amps off.
 
 ---
 
