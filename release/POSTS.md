@@ -11,33 +11,34 @@ Macintosh Garden page once it's approved if you prefer.
 
 ## 1. Mac OS 9 Lives forum (primary)
 
-Board: the Mac mini G4 / unsupported hardware section.
+Board: the Mac mini G4 / unsupported hardware section. If UnexpectedBomb's
+Mini Audio thread is there, this also works as a reply to it.
 
-Title: Mini Sound Enabler 3.0: speaker, headphone switching, alerts and volume on the Mac mini G4
+Title: Mini Sound Enabler 3.0: speaker, headphone switching, alert sounds and slider volume on the Mac mini G4
 
 Body:
 
 Hi all,
 
-Here's Mini Sound Enabler 3.0 (formerly MacMini Audio Fix), a system extension that makes the built-in audio on the Mac mini G4 usable under MacOS9Lives.
-
-Under OS 9 the mini's sound driver leaves the output amplifiers switched off: the internal speaker is silent and the headphone jack barely works. Matouš Pikous's original MacMiniAudioFix found the amp pins and turned them on once at startup. 3.0 builds on it, stays resident and adds:
+I've released Mini Sound Enabler 3.0, a single extension that gets the Mac mini G4's built-in audio fully working under MacOS9Lives. It started as Matouš Pikous's MacMiniAudioFix, which found the amp pins and switched them on at startup. Version 3.0 stays running after startup and adds:
 
 - automatic speaker/headphone switching when you plug in or unplug;
-- system alert sounds (they were silent);
-- a working volume slider and Control Strip volume. The mini has no hardware volume, so the extension scales the sound in software;
+- system alert sounds, which were silent before;
+- volume from the normal Sound control panel slider and the Control Strip, with nothing to select. The mini has no hardware volume, so the extension scales the sound in software;
 - mute and volume 0 switch the amps off, so there's no hiss.
 
-It's for the Mac mini G4 only: don't install it on a Cube or any other Mac.
+I know UnexpectedBomb has been working on the same machine with a Control Strip module and a selectable sound output. We arrived at the same pin map (0x6F headphones, 0x70 speaker, 0x67 headphone detect), and the volume ended up working by a different route. Their write-up says capturing a sound component from an extension never gets called. That matches what I saw for the driver and the mixer. The per-channel Frequency Equalizer is different: the Sound Manager opens it later, for each channel, so a stand-in captured in its place does get every buffer and can scale it. The details are in TECHNICAL.md in the source.
 
-Install: drag "Mini Sound Enabler" onto the closed System Folder and restart. Remove any older version first, including ones still called "MacMini Audio Fix". The disk image has a Read Me with the startup icons and troubleshooting. It also has AudioProbe, the diagnostic tool I used to work all this out. If something doesn't work, run AudioProbe once and post the "AudioProbe Log" it writes.
+Don't run both at once: their Control Strip module and this extension each drive the same amp pins and would fight over them.
 
-Tested on an early 2005 mini (PowerMac10,1) with 9.2.2. Reports from late 2005 (10,2) owners are very welcome.
+Install: remove any older MacMini Audio Fix, drag "Mini Sound Enabler" onto the closed System Folder and restart. It's for the Mac mini G4 only; on other Macs the same pins do something else. The disk image has a Read Me with the startup icons and troubleshooting, plus AudioProbe, the diagnostic app I used throughout. If something doesn't work, run AudioProbe once and post the "AudioProbe Log" it writes.
+
+Tested on an early 2005 mini (PowerMac10,1) with 9.2.2. I'd like to hear from anyone with a late 2005 model (10,2).
 
 Download: https://github.com/VikSn0w/MiniSoundEnabler/releases/tag/v3.0
 Source (GPLv3) and technical notes: https://github.com/VikSn0w/MiniSoundEnabler
 
-Thanks to Matouš Pikous for the original fix, and to everyone here who made OS 9 on the mini possible in the first place.
+Thanks to Matouš Pikous for the original fix, to UnexpectedBomb for the write-up, and to everyone here who got OS 9 running on the mini in the first place.
 
 ---
 
