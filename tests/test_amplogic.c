@@ -14,9 +14,19 @@ static UInt8 regs[256];
 static struct { UInt32 pin; UInt8 value; } writes[16];
 static int nWrites;
 
-static UInt8 fakeRead(UInt32 offset) { return regs[offset & 0xFF]; }
+static int nOtherPinAccess;     /* reads or writes outside 0x6F/0x70 */
+static int OtherPin(UInt32 offset)
+{
+    return offset != kPinHeadphone && offset != kPinSpeaker;
+}
+static UInt8 fakeRead(UInt32 offset)
+{
+    if (OtherPin(offset)) nOtherPinAccess++;
+    return regs[offset & 0xFF];
+}
 static void fakeWrite(UInt32 offset, UInt8 value)
 {
+    if (OtherPin(offset)) nOtherPinAccess++;
     regs[offset & 0xFF] = value;
     if (nWrites < 16) { writes[nWrites].pin = offset; writes[nWrites].value = value; }
     nWrites++;
@@ -26,6 +36,7 @@ static void resetRegs(UInt8 v6E, UInt8 v6F, UInt8 v70, UInt8 v79)
     memset(regs, 0, sizeof(regs));
     regs[0x6E] = v6E; regs[0x6F] = v6F; regs[0x70] = v70; regs[0x79] = v79;
     nWrites = 0;
+    nOtherPinAccess = 0;
 }
 
 static void test_headphones_in_bit(void)
@@ -36,15 +47,10 @@ static void test_headphones_in_bit(void)
 
 static void test_desired_table(void)
 {
-    int x;
     CHECK(AmpDesired(kPinSpeaker, 0, 0) == kAmpOn);
     CHECK(AmpDesired(kPinSpeaker, 1, 0) == kAmpOff);
     CHECK(AmpDesired(kPinHeadphone, 0, 0) == kAmpOff);
     CHECK(AmpDesired(kPinHeadphone, 1, 0) == kAmpOn);
-    for (x = 0; x <= 1; x++) {
-        CHECK(AmpDesired(kPinAmp6E, x, 0) == kAmpOn);
-        CHECK(AmpDesired(kPinAmp79, x, 0) == kAmpOn);
-    }
     CHECK(kAmpOn == 0x05 && kAmpOff == 0x04);
 }
 
@@ -79,10 +85,28 @@ static void test_install_with_headphones_in(void)
 static void test_apply_counts_only_mismatches(void)
 {
     resetRegs(0x07, 0x04, 0x04, 0x04);
-    CHECK(AmpApply(0, 0, fakeRead, fakeWrite) == 2);
-    CHECK(nWrites == 2);
+    CHECK(AmpApply(0, 0, fakeRead, fakeWrite) == 1);
+    CHECK(nWrites == 1);
     CHECK(writes[0].pin == kPinSpeaker && writes[0].value == kAmpOn);
-    CHECK(writes[1].pin == kPinAmp79 && writes[1].value == kAmpOn);
+}
+
+/* 0x6E and 0x79 aren't audio pins (the device tree lists only 0x67,
+   0x6F and 0x70), and forcing them on breaks FireWire: never touch
+   them, whatever state they're in */
+static void test_leaves_6E_and_79_alone(void)
+{
+    int hp, silent;
+    for (hp = 0; hp <= 1; hp++)
+        for (silent = 0; silent <= 1; silent++) {
+            resetRegs(0x04, 0x04, 0x04, 0x04);
+            AmpApply(hp, silent, fakeRead, fakeWrite);
+            CHECK(nOtherPinAccess == 0);
+            CHECK(regs[0x6E] == 0x04 && regs[0x79] == 0x04);
+            resetRegs(0x07, 0x07, 0x07, 0x07);
+            AmpApply(hp, silent, fakeRead, fakeWrite);
+            CHECK(nOtherPinAccess == 0);
+            CHECK(regs[0x6E] == 0x07 && regs[0x79] == 0x07);
+        }
 }
 
 static void test_silent_turns_both_outputs_off(void)
@@ -91,8 +115,6 @@ static void test_silent_turns_both_outputs_off(void)
     for (hp = 0; hp <= 1; hp++) {
         CHECK(AmpDesired(kPinSpeaker, hp, 1) == kAmpOff);
         CHECK(AmpDesired(kPinHeadphone, hp, 1) == kAmpOff);
-        CHECK(AmpDesired(kPinAmp6E, hp, 1) == kAmpOn);
-        CHECK(AmpDesired(kPinAmp79, hp, 1) == kAmpOn);
     }
 }
 
@@ -117,6 +139,7 @@ int main(void)
     test_single_glitch_ignored();
     test_install_with_headphones_in();
     test_apply_counts_only_mismatches();
+    test_leaves_6E_and_79_alone();
     test_silent_turns_both_outputs_off();
     test_unmute_restores_the_right_output();
     if (gFailures) { printf("test_amplogic: %d failed\n", gFailures); return 1; }

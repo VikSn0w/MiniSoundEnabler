@@ -22,9 +22,14 @@ something else, so don't install it there.
 MacOS9Lives presents the mini to OS 9 as a G4 Cube, and its sound
 reaches the DAC built into the mac-io controller. The amplifiers
 behind that DAC are switched by GPIO pins on mac-io: `0x70` for the
-speaker, `0x6F` for the headphone jack, and `0x6E` and `0x79`, which
-must also stay on. Pin `0x67` reports whether headphones are plugged
-in. OS 9's driver never sets any of them.
+speaker and `0x6F` for the headphone jack, and pin `0x67` reports
+whether headphones are plugged in. The mini's device tree names these
+three as its audio pins. OS 9's driver leaves both amps off.
+
+Up to 3.0 the extension, like the original, also forced pins `0x6E`
+and `0x79` on. They aren't audio pins, and forcing them is the likely
+reason FireWire drives stopped working with it installed. Since 3.1
+they are left alone.
 
 **Amps and switching.** A Time Manager task runs every 250 ms. It reads
 the headphone-detect pin, waits for two matching reads so a
@@ -54,12 +59,11 @@ that copy. The status record it publishes under Gestalt `'MmAf'` is
 what AudioProbe reads.
 
 If anything after finding the hardware fails, it falls back to
-switching all four amps on once, which was the behaviour of the old
-8.0 fix. TECHNICAL.md has the details.
+switching both amps on once, as the old 8.0 fix did. TECHNICAL.md has the details.
 
 ## Download and install
 
-Get `MiniSoundEnabler-3.0.img.bin` from the
+Get `MiniSoundEnabler-3.1.img.bin` from the
 [releases page](../../releases), expand it with StuffIt Expander and
 open the image with Disk Copy. Remove any older version from the
 Extensions folder, drag **Mini Sound Enabler** onto the closed System

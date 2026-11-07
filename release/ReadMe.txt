@@ -1,9 +1,14 @@
-Mini Sound Enabler 3.0
+Mini Sound Enabler 3.1
 for the Mac mini G4 running Mac OS 9.2.2 (MacOS9Lives)
 
 (Formerly MacMini Audio Fix.)
 
 Under Mac OS 9 the Mac mini G4's internal speaker is silent and the headphone jack barely works, because the sound driver leaves the output amplifiers switched off. This extension switches them on and makes the rest of the built-in audio usable.
+
+
+NEW IN 3.1
+
+Earlier versions also switched on two pins that have nothing to do with sound, which could stop FireWire drives from working. 3.1 leaves them alone.
 
 
 WHAT IT DOES
@@ -62,6 +67,6 @@ Copyright 2026 Matous Pikous and Vittorio Picone.
 
 Mini Sound Enabler grew out of MacMiniAudioFix by Matous Pikous, which found the Mac mini's amplifier pins and switched them on at startup. Vittorio Picone added everything that stays running: switching, alert sounds, volume and mute.
 
-Mini Sound Enabler is free software, released under the GNU General Public License version 3. The source code and full technical notes are in MiniSoundEnabler-3.0-source.zip, published alongside this disk image.
+Mini Sound Enabler is free software, released under the GNU General Public License version 3. The source code and full technical notes are in MiniSoundEnabler-3.1-source.zip, published alongside this disk image.
 
 Built with Retro68. Thanks to the MacOS9Lives community for making OS 9 run on the Mac mini at all.

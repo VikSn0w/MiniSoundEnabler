@@ -5,8 +5,7 @@
 #include "AmpLogic.h"
 
 /* order AmpApply visits the pins in */
-static const UInt32 kAmpPins[] = { kPinAmp6E, kPinHeadphone, kPinSpeaker,
-                                   kPinAmp79 };
+static const UInt32 kAmpPins[] = { kPinHeadphone, kPinSpeaker };
 
 /* A state change counts after this many identical reads in a row */
 #define kDebounceReads  2
@@ -42,8 +41,7 @@ UInt8 AmpDesired(UInt32 pin, Boolean headphonesIn, Boolean silent)
 {
     switch (pin) {
     case kPinSpeaker:   return (headphonesIn || silent) ? kAmpOff : kAmpOn;
-    case kPinHeadphone: return (headphonesIn && !silent) ? kAmpOn : kAmpOff;
-    default:            return kAmpOn;      /* 0x6E, 0x79: left on, as in v2 */
+    default:            return (headphonesIn && !silent) ? kAmpOn : kAmpOff;
     }
 }
 

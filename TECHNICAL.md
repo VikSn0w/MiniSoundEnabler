@@ -1,4 +1,4 @@
-# Mini Sound Enabler 3.0 — Technical Notes
+# Mini Sound Enabler — Technical Notes
 
 Until version 3.0 this extension was called **MacMini Audio Fix**; the
 repository, source files and the `MmAf` creator code keep that name.
@@ -67,8 +67,8 @@ and 16-bit, all play.
 |---|---|---|
 | `0x70` | **Internal speaker amp** | off → speaker silent |
 | `0x6F` | **Headphone jack amp** | off → jack silent |
-| `0x6E` | amp-related, no audible effect | kept on |
-| `0x79` | amp-related, no audible effect | kept on |
+| `0x6E` | not an audio pin | left alone since 3.1 (see below) |
+| `0x79` | not an audio pin | left alone since 3.1 (see below) |
 | `0x67` | **Headphone detect** | bit 1: `1` = nothing plugged (`0x82`), `0` = headphones in (`0x80`) |
 | `0x51` | follows the jack | `0xFF` out / `0x7F` in |
 
@@ -82,6 +82,17 @@ Writing **`0x05`** turns an amp on; it reads back `0x07`. Writing
 after boot with headphones in. The cause is unknown, and the amp
 monitor corrects it.
 
+The device tree describes only three audio pins, under
+`mac-io:gpio`: `gpio5` at `0x6F` ("headphone-mute"), `gpio6` at
+`0x70` ("amp-mute") and `extint-gpio15` at `0x67`
+("headphone-detect"). The original fix also forced `0x6E` and `0x79`
+on, and 3.0 kept them on. With either one off, the speaker and jack
+still played. Users reported that FireWire drives stop working with
+the extension installed ([MacLegacyLabs issue
+1](https://github.com/matouspikous/MacLegacyLabs/issues/1)); forcing
+these two non-audio pins is the likely cause, so 3.1 never reads or
+writes them. Not yet confirmed with a FireWire drive.
+
 ---
 
 ## 2. What the extension does
@@ -94,11 +105,11 @@ A Time Manager task runs every **250 ms** at interrupt time. On each tick it:
    consecutive matching reads**, about 0.5 s;
 2. works out the wanted state of each pin:
 
-   | | `0x70` speaker | `0x6F` jack | `0x6E`, `0x79` |
-   |---|---|---|---|
-   | headphones out | on | off | on |
-   | headphones in | off | on | on |
-   | **silent** (mute, or volume 0) | off | off | on |
+   | | `0x70` speaker | `0x6F` jack |
+   |---|---|---|
+   | headphones out | on | off |
+   | headphones in | off | on |
+   | **silent** (mute, or volume 0) | off | off |
 
 3. rewrites only the pins whose bit 0 is wrong, and counts each write
    as a "correction".
@@ -225,7 +236,7 @@ second installed copy of the extension finds a record without
 `copyPending`, it steps aside.
 
 Any failure after mac-io is found falls back to the v8.0 behaviour:
-all four amps on once, and the **dash** icon.
+both output amps on once, and the **dash** icon.
 
 | Boot icon | Meaning |
 |---|---|
@@ -391,3 +402,5 @@ docs/superpowers/    v3 design spec (with outcome) and implementation plan
   - stored volume settings;
   - hardware mute;
   - a reproducible build on a modern Mac.
+- **3.1:** stops forcing `0x6E` and `0x79`, the likely cause of the
+  FireWire conflict.

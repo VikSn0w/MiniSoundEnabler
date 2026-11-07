@@ -41,8 +41,7 @@
 
 #define kPristinePEFType 'MmPf'     /* the PEF again, never prepared by startup */
 
-static const UInt32 kAllAmps[] = { kPinAmp6E, kPinHeadphone, kPinSpeaker,
-                                   kPinAmp79 };
+static const UInt32 kAllAmps[] = { kPinHeadphone, kPinSpeaker };
 
 /* ---- INIT Icon ---- */
 
@@ -83,7 +82,8 @@ static void ShowINITIcon(short iconID, Boolean advance)
 #define BREADCRUMB()
 #endif
 
-/* v8.0 behaviour: every amp pin on, once */
+/* Fallback: both output amps on, once (v8.0 also forced 0x6E and
+   0x79, which broke FireWire) */
 static void EnableAllAmps(void)
 {
     unsigned i;

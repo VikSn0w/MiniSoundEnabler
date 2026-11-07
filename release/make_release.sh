@@ -8,20 +8,20 @@
 #  check) and AudioProbe, runs the host tests, and writes to
 #  release/dist/:
 #
-#    MiniSoundEnabler-3.0.img       Disk Copy 4.2 image (dImg/dCpy):
+#    MiniSoundEnabler-<version>.img       Disk Copy 4.2 image (dImg/dCpy):
 #                                    Mini Sound Enabler
 #                                    Read Me               (SimpleText)
 #                                    Extras:AudioProbe
-#    MiniSoundEnabler-3.0.img.bin   the image as MacBinary
-#    MiniSoundEnabler-3.0.img.hqx   the image as BinHex
-#    MiniSoundEnabler-3.0-source.zip  the source (git HEAD)
+#    MiniSoundEnabler-<version>.img.bin   the image as MacBinary
+#    MiniSoundEnabler-<version>.img.hqx   the image as BinHex
+#    MiniSoundEnabler-<version>-source.zip  the source (git HEAD)
 #    SHA256SUMS
 #
 #  The working tree must be clean, so the source zip matches the build.
 
 set -e
 
-VERSION=3.0
+VERSION=3.1
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/.." && pwd)
 RETRO68=${RETRO68:-$HOME/Retro68-toolchain}

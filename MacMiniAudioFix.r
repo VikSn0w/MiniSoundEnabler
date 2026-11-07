@@ -1,5 +1,5 @@
 /*
- *  MacMiniAudioFix.r  —  v3.0
+ *  MacMiniAudioFix.r  —  v3.1
  *  Rez source for Mini Sound Enabler extension.
  */
 
@@ -7,19 +7,19 @@
 #include "SysTypes.r"
 
 resource 'vers' (1) {
-    0x03, 0x00, release, 0x00, verUS,
-    "3.0",
-    "3.0 - Mini Sound Enabler"
+    0x03, 0x10, release, 0x00, verUS,
+    "3.1",
+    "3.1 - Mini Sound Enabler"
 };
 
 resource 'vers' (2) {
-    0x03, 0x00, release, 0x00, verUS,
-    "3.0",
+    0x03, 0x10, release, 0x00, verUS,
+    "3.1",
     "Speaker/headphone switching, alerts, volume"
 };
 
 resource 'STR ' (-16482, "Extension Description") {
-    "Mini Sound Enabler 3.0 - Speaker/headphone "
+    "Mini Sound Enabler 3.1 - Speaker/headphone "
     "switching, alert sounds and volume for Mac Mini G4."
 };
 
