@@ -17,6 +17,46 @@ barely works. The extension switches them on and adds:
 It is for the Mac mini G4 only. On other Macs the pins it writes mean
 something else, so don't install it there.
 
+## How it works
+
+MacOS9Lives presents the mini to OS 9 as a G4 Cube, and its sound
+reaches the DAC built into the mac-io controller. The amplifiers
+behind that DAC are switched by GPIO pins on mac-io: `0x70` for the
+speaker, `0x6F` for the headphone jack, and `0x6E` and `0x79`, which
+must also stay on. Pin `0x67` reports whether headphones are plugged
+in. OS 9's driver never sets any of them.
+
+**Amps and switching.** A Time Manager task runs every 250 ms. It reads
+the headphone-detect pin, waits for two matching reads so a
+half-inserted plug doesn't flap, and sets the speaker and headphone
+amps to match. It also switches both off when the sound is muted or
+at volume 0, which is why mute has no hiss.
+
+**Alert sounds.** The extension wraps the Built-in sound driver
+(`sdev/awgc`) in a component of its own. The driver doesn't answer the
+Sound Manager's volume queries, and SysBeep stays silent when it
+can't read a volume. The wrapper answers them and remembers what the
+slider, the Control Strip and mute set.
+
+**Volume.** The mini has no hardware volume, and the driver pulls its
+sound from a mixer the extension can't reach. Every sound channel
+does pass through a Frequency Equalizer component (`snfx/eqal`),
+though. The extension captures that component behind a stand-in that
+forwards every call and scales each 16-bit buffer by the current
+volume before it moves on. The equalizer only registers after
+startup, so the capture is retried until it succeeds.
+
+**Staying resident.** It's a PowerPC INIT built with Retro68. OS 9
+loads INITs into a temporary zone that is wiped when the Finder
+starts, so at startup the extension loads a second, untouched copy of
+its code (kept in an `'MmPf'` resource) into the system heap and runs
+that copy. The status record it publishes under Gestalt `'MmAf'` is
+what AudioProbe reads.
+
+If anything after finding the hardware fails, it falls back to
+switching all four amps on once, which was the behaviour of the old
+8.0 fix. TECHNICAL.md has the details.
+
 ## Download and install
 
 Get `MiniSoundEnabler-3.0.img.bin` from the
