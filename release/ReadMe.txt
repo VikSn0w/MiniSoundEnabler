@@ -58,7 +58,9 @@ The Extras folder holds AudioProbe, the diagnostic tool used to develop this ext
 
 LICENSE AND SOURCE
 
-Copyright 2026 Vittorio Picone.
+Copyright 2026 Matous Pikous and Vittorio Picone.
+
+Mini Sound Enabler grew out of MacMiniAudioFix by Matous Pikous, which found the Mac mini's amplifier pins and switched them on at startup. Vittorio Picone added everything that stays running: switching, alert sounds, volume and mute.
 
 Mini Sound Enabler is free software, released under the GNU General Public License version 3. The source code and full technical notes are in MiniSoundEnabler-3.0-source.zip, published alongside this disk image.
 

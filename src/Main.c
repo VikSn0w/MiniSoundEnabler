@@ -7,6 +7,9 @@
  *  Any failure after mac-io is found falls back to the v8.0 fix.
  *
  *  Build: Retro68/build.sh <stage>
+ *
+ *  Based on MacMiniAudioFix by Matouš Pikous (MacLegacyLabs, GPLv3);
+ *  v3 by Vittorio Picone.
  */
 
 #include <Types.h>

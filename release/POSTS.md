@@ -21,7 +21,7 @@ Hi all,
 
 Here's Mini Sound Enabler 3.0 (formerly MacMini Audio Fix), a system extension that makes the built-in audio on the Mac mini G4 usable under MacOS9Lives.
 
-Under OS 9 the mini's sound driver leaves the output amplifiers switched off: the internal speaker is silent and the headphone jack barely works. The old 8.0 fix turned the amps on once at startup. 3.0 stays resident and adds:
+Under OS 9 the mini's sound driver leaves the output amplifiers switched off: the internal speaker is silent and the headphone jack barely works. Matouš Pikous's original MacMiniAudioFix found the amp pins and turned them on once at startup. 3.0 builds on it, stays resident and adds:
 
 - automatic speaker/headphone switching when you plug in or unplug;
 - system alert sounds (they were silent);
@@ -37,7 +37,7 @@ Tested on an early 2005 mini (PowerMac10,1) with 9.2.2. Reports from late 2005 (
 Download: https://github.com/VikSn0w/MiniSoundEnabler/releases/tag/v3.0
 Source (GPLv3) and technical notes: https://github.com/VikSn0w/MiniSoundEnabler
 
-Thanks to everyone here who made OS 9 on the mini possible in the first place.
+Thanks to Matouš Pikous for the original fix, and to everyone here who made OS 9 on the mini possible in the first place.
 
 ---
 
@@ -46,7 +46,7 @@ Thanks to everyone here who made OS 9 on the mini possible in the first place.
 - Title: Mini Sound Enabler
 - Version: 3.0
 - Year: 2026
-- Author: Vittorio Picone
+- Author: Vittorio Picone, based on MacMiniAudioFix by Matouš Pikous
 - Category: Utilities / System Extensions (or Sound)
 - License: Freeware / Open source (GPLv3)
 - Compatibility: Mac OS 9.2.2 (MacOS9Lives), PowerPC. Mac mini G4 only
@@ -56,7 +56,7 @@ Description:
 
 A system extension that makes the built-in audio of the Mac mini G4 work under Mac OS 9.2.2 with MacOS9Lives. Under OS 9 the mini's sound driver leaves the amplifiers switched off. Mini Sound Enabler turns them on and adds automatic speaker/headphone switching, system alert sounds, a working volume control (in software, as the mini has none in hardware), and no hiss when muted.
 
-For the Mac mini G4 only; do not install it on other Macs. Includes the AudioProbe diagnostic tool and a Read Me. The source archive has the code and the technical notes.
+For the Mac mini G4 only; do not install it on other Macs. Based on MacMiniAudioFix by Matouš Pikous. Includes the AudioProbe diagnostic tool and a Read Me. The source archive has the code and the technical notes.
 
 ---
 
@@ -64,7 +64,7 @@ For the Mac mini G4 only; do not install it on other Macs. Includes the AudioPro
 
 - Name: Mini Sound Enabler 3.0
 - Category: System Extensions / Utilities
-- Developer: Vittorio Picone
+- Developer: Vittorio Picone (based on MacMiniAudioFix by Matouš Pikous)
 - Year: 2026
 - Architecture: PowerPC
 - System requirements: Mac OS 9.2.2 with MacOS9Lives, Mac mini G4 only
@@ -84,7 +84,7 @@ Body:
 
 For anyone running OS 9 on a Mac mini G4 via MacOS9Lives: I've released Mini Sound Enabler 3.0, an extension that gets the built-in audio fully working. That means the speaker and headphone jack, automatic switching between them, alert sounds, volume and mute.
 
-How it works: the mini has no TAS3004 codec, so there's no hardware volume at all, and the amps hang off GPIO pins on the KeyLargo mac-io. The extension runs a Time Manager task that watches the headphone-detect GPIO and drives the amp pins. Volume is done by capturing the Sound Manager's per-channel Frequency Equalizer component behind a stand-in that scales each 16-bit buffer. It's built with Retro68 as an accelerated INIT that copies itself into the system heap.
+It builds on Matouš Pikous's MacMiniAudioFix, which found the amp pins. How it works: the mini has no TAS3004 codec, so there's no hardware volume at all, and the amps hang off GPIO pins on the KeyLargo mac-io. The extension runs a Time Manager task that watches the headphone-detect GPIO and drives the amp pins. Volume is done by capturing the Sound Manager's per-channel Frequency Equalizer component behind a stand-in that scales each 16-bit buffer. It's built with Retro68 as an accelerated INIT that copies itself into the system heap.
 
 Download: https://github.com/VikSn0w/MiniSoundEnabler/releases/tag/v3.0
 Source (GPLv3), with a long TECHNICAL.md on everything that did and didn't work: https://github.com/VikSn0w/MiniSoundEnabler
@@ -118,6 +118,6 @@ If you run OS 9 on a Mac mini G4 with MacOS9Lives, you've probably noticed the i
 
 Mini Sound Enabler 3.0 fixes that. It turns the amps on, switches between speaker and headphones automatically, makes alert sounds play, and makes the volume slider actually work. The mini has no hardware volume, so it's done in software. It's for the Mac mini G4 only.
 
-Free and open source (GPLv3). Download and source: https://github.com/VikSn0w/MiniSoundEnabler/releases/tag/v3.0
+It builds on Matouš Pikous's original MacMiniAudioFix. Free and open source (GPLv3). Download and source: https://github.com/VikSn0w/MiniSoundEnabler/releases/tag/v3.0
 
 Happy to answer questions about how it works. Getting volume control working took a lot of digging into the Sound Manager.

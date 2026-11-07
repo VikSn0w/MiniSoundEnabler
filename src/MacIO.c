@@ -4,6 +4,8 @@
  *  The base address comes from the Name Registry. GPIO pins are single
  *  bytes; FCR and I2S registers are 32-bit little-endian and must be
  *  read with 32-bit loads.
+ *
+ *  Based on MacMiniAudioFix by Matouš Pikous (MacLegacyLabs, GPLv3).
  */
 #include <MacTypes.h>
 #include <NameRegistry.h>

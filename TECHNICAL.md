@@ -380,11 +380,12 @@ docs/superpowers/    v3 design spec (with outcome) and implementation plan
 
 ## 8. History
 
-- **v8.0 (CodeWarrior):** a one-shot INIT that enabled the four amp
+- **v8.0 (CodeWarrior), by Matouš Pikous:** MacMiniAudioFix in
+  [MacLegacyLabs](https://github.com/matouspikous/MacLegacyLabs), a one-shot INIT that enabled the four amp
   GPIOs at boot. It found that `0x6E`/`0x6F`/`0x70`/`0x79` are the amp
   enables, after failed attempts at TAS3004 I2C writes, active-low
   GPIO writes and FCR1 bits.
-- **v3 (Retro68):**
+- **v3 (Retro68), by Vittorio Picone, renamed Mini Sound Enabler:**
   - resident amp monitor with headphone switching and keep-alive;
   - SysBeep fix;
   - stored volume settings;

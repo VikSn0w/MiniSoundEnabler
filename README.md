@@ -84,6 +84,16 @@ with a recorded sound output; see [emu/README.md](emu/README.md).
 stays resident, how the volume control works and what was tried
 before it did.
 
+## Credits
+
+Mini Sound Enabler grew out of **MacMiniAudioFix** by
+[Matouš Pikous](https://github.com/matouspikous), published in
+[MacLegacyLabs](https://github.com/matouspikous/MacLegacyLabs). That
+extension found the amp pins and turned them on at startup. Its
+hardware lookup, resources and one-shot fallback are the starting
+point of this code. Everything that stays resident (switching, alerts,
+volume, mute) and the Retro68 build were added by Vittorio Picone.
+
 ## License
 
-GPLv3. Copyright 2026 Vittorio Picone.
+GPLv3. Copyright 2026 Matouš Pikous and Vittorio Picone.
