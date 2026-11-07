@@ -4,8 +4,8 @@ Ready to paste. Upload these from `release/dist/`:
 - `MiniSoundEnabler-3.0.img.bin` (or `.hqx` where only BinHex is accepted);
 - `MiniSoundEnabler-3.0-source.zip`.
 
-Replace `[download link]` and `[source link]` with wherever the files
-end up (for example the Macintosh Garden page once it's approved).
+The links point to the GitHub release and repository. Swap in the
+Macintosh Garden page once it's approved if you prefer.
 
 ---
 
@@ -34,8 +34,8 @@ Install: drag "Mini Sound Enabler" onto the closed System Folder and restart. Re
 
 Tested on an early 2005 mini (PowerMac10,1) with 9.2.2. Reports from late 2005 (10,2) owners are very welcome.
 
-Download: [download link]
-Source (GPLv3) and technical notes: [source link]
+Download: https://github.com/VikSn0w/MiniSoundEnabler/releases/tag/v3.0
+Source (GPLv3) and technical notes: https://github.com/VikSn0w/MiniSoundEnabler
 
 Thanks to everyone here who made OS 9 on the mini possible in the first place.
 
@@ -86,8 +86,8 @@ For anyone running OS 9 on a Mac mini G4 via MacOS9Lives: I've released Mini Sou
 
 How it works: the mini has no TAS3004 codec, so there's no hardware volume at all, and the amps hang off GPIO pins on the KeyLargo mac-io. The extension runs a Time Manager task that watches the headphone-detect GPIO and drives the amp pins. Volume is done by capturing the Sound Manager's per-channel Frequency Equalizer component behind a stand-in that scales each 16-bit buffer. It's built with Retro68 as an accelerated INIT that copies itself into the system heap.
 
-Download: [download link]
-Source (GPLv3), with a long TECHNICAL.md on everything that did and didn't work: [source link]
+Download: https://github.com/VikSn0w/MiniSoundEnabler/releases/tag/v3.0
+Source (GPLv3), with a long TECHNICAL.md on everything that did and didn't work: https://github.com/VikSn0w/MiniSoundEnabler
 
 ---
 
@@ -103,8 +103,8 @@ This one is for real hardware: a Mac OS 9 extension that makes the built-in audi
 
 It may interest people here because a lot of the development happened in QEMU. I used `mac99` with Mark Cave-Ayland's screamer branch and an unattended test loop: build, install onto the VM disk from the host, boot headless with the audio recorded to WAV, then measure the levels. That's how I checked the software volume before trying it on the real mini. The scripts are in the source archive under `emu/`.
 
-Download: [download link]
-Source: [source link]
+Download: https://github.com/VikSn0w/MiniSoundEnabler/releases/tag/v3.0
+Source: https://github.com/VikSn0w/MiniSoundEnabler
 
 ---
 
@@ -118,6 +118,6 @@ If you run OS 9 on a Mac mini G4 with MacOS9Lives, you've probably noticed the i
 
 Mini Sound Enabler 3.0 fixes that. It turns the amps on, switches between speaker and headphones automatically, makes alert sounds play, and makes the volume slider actually work. The mini has no hardware volume, so it's done in software. It's for the Mac mini G4 only.
 
-Free and open source (GPLv3). Download and source: [download link]
+Free and open source (GPLv3). Download and source: https://github.com/VikSn0w/MiniSoundEnabler/releases/tag/v3.0
 
 Happy to answer questions about how it works. Getting volume control working took a lot of digging into the Sound Manager.
